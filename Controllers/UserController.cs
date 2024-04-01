@@ -1,4 +1,5 @@
 ﻿using DatingApp.API.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -6,9 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    [Authorize]
+    public class UsersController : BaseApiController
     {
         private readonly DataContext _dataContext;
 
@@ -18,11 +18,13 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> getUsers()
         {
             var users = await _dataContext.Users.ToListAsync();
             return Ok(users);
         }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> getUser(int id)
